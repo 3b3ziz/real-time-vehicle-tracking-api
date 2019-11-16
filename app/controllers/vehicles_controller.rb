@@ -1,4 +1,5 @@
 require 'rest-client'
+require 'geocoder'
 
 class VehiclesController < ApplicationController
   # TODO: change function name
@@ -37,7 +38,8 @@ class VehiclesController < ApplicationController
       at: params[:at]
     }
     @vehicle = Vehicle.find_by_vehicle_id(@vehicle_id)
-    if @vehicle
+    @distance_to_center = Geocoder::Calculations.distance_between([@latitude, @longitude], [52.53, 13.403], { units: :km })
+    if @vehicle and @distance_to_center <= 3.5
       @location = @vehicle.locations.create(@location_attrs)
       if @location.save
         response = RestClient.put "https://door2door-f9553.firebaseio.com/locations/#{@vehicle_id}.json", { 
