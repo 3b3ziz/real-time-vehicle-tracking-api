@@ -19,7 +19,8 @@ class VehiclesController < ApplicationController
   def destroy
     @vehicle_id = params[:id]
     @vehicle = Vehicle.find_by_vehicle_id(@vehicle_id)
-    if @vehicle.destroy
+    if @vehicle and @vehicle.destroy
+      response = RestClient.delete "https://door2door-f9553.firebaseio.com/locations/#{@vehicle_id}.json"
       render json: {}, status: 200
     # TODO: handle if not found ..
     # else
@@ -37,20 +38,31 @@ class VehiclesController < ApplicationController
       lng: params[:lng],
       at: params[:at]
     }
+    @location_body = { 
+      lat: @latitude,
+      lng: @longitude,
+      at: @created_at
+    }.to_json
     @vehicle = Vehicle.find_by_vehicle_id(@vehicle_id)
     @distance_to_center = Geocoder::Calculations.distance_between([@latitude, @longitude], [52.53, 13.403], { units: :km })
+    #improvisation -- should remove location from view if out of boundries
+    if @distance_to_center > 3.5 and has_locations
+      # delete_response = Faraday.delete "https://door2door-f9553.firebaseio.com/locations/#{@vehicle_id}.json"
+      delete_response = RestClient.delete "https://door2door-f9553.firebaseio.com/locations/#{@vehicle_id}.json"
+    end
+
     if @vehicle and @distance_to_center <= 3.5
       @location = @vehicle.locations.create(@location_attrs)
       if @location.save
-        response = RestClient.put "https://door2door-f9553.firebaseio.com/locations/#{@vehicle_id}.json", { 
-          lat: @latitude,
-          lng: @longitude,
-          at: @created_at
-        }.to_json, { content_type: :json, accept: :json }
+        update_response = RestClient.put "https://door2door-f9553.firebaseio.com/locations/#{@vehicle_id}.json", @location_body , { content_type: :json, accept: :json }
+        # update_response = Faraday.put("https://door2door-f9553.firebaseio.com/locations/#{@vehicle_id}.json", @location_body, "Content-Type" => "application/json")
         render json: {}, status: 200
       else
-        render json: @location.errors, status: :bad_request
+        render json: {}, status: 200
+        # render json: @location.errors, status: :bad_request
       end
+    else
+      render json: {}, status: 200
     end
   end
  
