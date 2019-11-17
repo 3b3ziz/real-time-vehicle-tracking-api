@@ -45,6 +45,7 @@ class VehiclesController < ApplicationController
     }.to_json
     @vehicle = Vehicle.find_by_vehicle_id(@vehicle_id)
     @distance_to_center = Geocoder::Calculations.distance_between([@latitude, @longitude], [52.53, 13.403], { units: :km })
+    has_locations = @vehicle.locations.length
     #improvisation -- should remove location from view if out of boundries
     if @distance_to_center > 3.5 and has_locations
       # delete_response = Faraday.delete "https://door2door-f9553.firebaseio.com/locations/#{@vehicle_id}.json"
