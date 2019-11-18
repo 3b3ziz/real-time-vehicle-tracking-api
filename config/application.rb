@@ -39,5 +39,6 @@ module Door2door2backend
       end if File.exists?(env_file)
     end
     config.api_only = true
+    # config.active_job.queue_adapter = :sidekiq
   end
 end
