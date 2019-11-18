@@ -1,0 +1,49 @@
+version: '3.5'
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_USER: "postgres"
+      POSTGRES_DB: "door2door"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+
+  web:
+    build:
+      context: .
+      dockerfile: backend.dockerfile
+    ports:
+      - "10000:10000"
+    volumes:
+      - .:/myapp
+    environment:
+      DATABASE_HOST: "db"
+      DATABASE_NAME: "door2door"
+      DATABASE_USERNAME: "postgres"
+      DATABASE_PASSWORD: "postgres"
+      REDIS_URL: "redis://redis:6379"
+    depends_on: 
+      - db
+      - redis
+    tty: true
+    stdin_open: true
+
+  redis:
+    image: redis
+
+  sidekiq:
+    build:
+      context: .
+      dockerfile: backend.dockerfile
+    command: bundle exec sidekiq
+    volumes:
+      - .:/myapp
+    environment:
+      REDIS_URL: "redis://redis:6379"
+    depends_on:
+      - db
+      - redis
+
+volumes:
+  postgres_data:
