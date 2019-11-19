@@ -23,10 +23,10 @@ default: &default
 
 development:
   <<: *default
-  host: <%= ENV['DATABASE_HOST'] %>
-  database: <%= ENV['DATABASE_USERNAME'] %>
-  username: <%= ENV['DATABASE_USERNAME'] %>
-  password: <%= ENV['DATABASE_PASSWORD'] %>
+  host: <%= ENV['DB_HOST'] %>
+  database: <%= ENV['DB_NAME'] %>
+  username: <%= ENV['DB_USERNAME'] %>
+  password: <%= ENV['DB_PASSWORD'] %>
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
@@ -80,8 +80,8 @@ development:
 #   production:
 #     url: <%= ENV['DATABASE_URL'] %>
 #
-production:
-  <<: *default
-  database: door2door2backend_production
-  username: door2door2backend
-  password: <%= ENV['DOOR2DOOR2BACKEND_DATABASE_PASSWORD'] %>
+# production:
+#   <<: *default
+#   database: door2door2backend_production
+#   username: door2door2backend
+#   password: <%= ENV['DOOR2DOOR2BACKEND_DATABASE_PASSWORD'] %>

@@ -18,11 +18,11 @@ services:
     volumes:
       - .:/myapp
     environment:
-      DATABASE_HOST: "db"
-      DATABASE_NAME: "door2door"
-      DATABASE_USERNAME: "postgres"
-      DATABASE_PASSWORD: "postgres"
-      REDIS_URL: "redis://redis:6379"
+      DB_HOST: db
+      DB_NAME: door2door
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      REDIS_URL: redis://redis:6379
     depends_on: 
       - db
       - redis
