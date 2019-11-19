@@ -47,3 +47,5 @@ gem 'geocoder'
 gem 'sidekiq'
 
 gem 'redis'
+
+gem 'rubocop', require: false
