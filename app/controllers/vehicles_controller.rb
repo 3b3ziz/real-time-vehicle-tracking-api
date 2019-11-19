@@ -3,6 +3,8 @@
 require 'geocoder'
 
 class VehiclesController < ApplicationController
+  around_action :collect_metrics, only: :update_location
+
   def create
     @vehicle_id = params[:id]
     @vehicle = Vehicle.new(vehicle_id: @vehicle_id)
