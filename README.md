@@ -1,4 +1,4 @@
-# Door2door Backend Challenge README
+# Real-time Vehicle Tracking Challenge README
 
 This app uses Ruby(Rails), Postgres, Redis and Sidekiq.
 
